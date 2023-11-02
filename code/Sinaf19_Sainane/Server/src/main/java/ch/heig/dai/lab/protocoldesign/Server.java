@@ -1,6 +1,9 @@
 package ch.heig.dai.lab.protocoldesign;
 
 public class Server {
+
+
+    final String[] OPERATIONS = {"ADD", "MUL", "POW", "SOLVE_LINEAR"};
     final int SERVER_PORT = 1234;
 
     public static void main(String[] args) {
