@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Client {
     final String SERVER_ADDRESS = "localhost";
-    final int SERVER_PORT = 555;
+    final int SERVER_PORT = 5555;
 
     public static void main(String[] args) {
         // Create a new client and run it
@@ -27,8 +27,12 @@ public class Client {
                     new OutputStreamWriter(socket.getOutputStream(),
                             StandardCharsets.UTF_8))) {
 
+
+
             System.out.println("Please input your calculation: ");
 
+            // Is it the client that should check for the conformity of the user input ?
+            // or the server ?
             String calculation = stdin.nextLine() + '\n';
 
             out.write(calculation);
