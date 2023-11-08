@@ -19,53 +19,41 @@ public class Server {
 
     private void run() {
 
-        try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
+        try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
+             Socket clientSocket = serverSocket.accept();
+             PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
+             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));) {
 
-            while (true) {
-                try (Socket socket = serverSocket.accept()) {
+            System.out.println("Client connected on port " + SERVER_PORT + ". Servicing requests");
+            String inputLine;
+            String answerToSend = "";
 
-                    BufferedReader in = new BufferedReader(
-                            new InputStreamReader(
-                                    socket.getInputStream(), StandardCharsets.UTF_8));
+            out.println("Welcome! You can use the following commands: \n");
+            out.flush();
 
-                    BufferedWriter out = new BufferedWriter(
-                            new OutputStreamWriter(
-                                    socket.getOutputStream(), StandardCharsets.UTF_8));
-
-                    out.write("Welcome! You can use the following commands: \n");
-                    out.flush();
-
-                    for (String s : OPERATIONS) {
-                        out.write(s + "\n");
-                        out.flush();
-                    }
-
-                    out.write("END_OF_OPERATIONS\n");
-                    out.flush();
-
-
-                    String line;
-                    String answerToSend = "";
-                    // out.write("Reading until client closes connection...");
-                    //System.out.println(in.readLine());
-                    line = in.readLine();
-                    answerToSend = answer(line);
-
-                    out.write(answerToSend + '\n');
-                    out.flush();
-
-                    out.write("Finishing process...");
-                    socket.close();
-                    out.close();
-                    in.close();
-
-                } catch (IOException e) {
-                    System.out.println("Server: socket ex.: " + e);
-                }
+            for (String s : OPERATIONS) {
+                out.write(s + "\n");
+                out.flush();
             }
 
+            out.println("END_OF_OPERATIONS\n");
+            out.flush();
+
+            if ((inputLine = in.readLine()) != null) {
+                System.out.println(inputLine);
+                answerToSend = answer(inputLine);
+            }
+
+            out.println(answerToSend + '\n');
+            out.flush();
+
+            out.println("Finishing process...");
+            serverSocket.close();
+            out.close();
+            in.close();
+
         } catch (IOException e) {
-            System.out.println("Server: server socket ex.: " + e);
+            System.out.println("Server: socket ex.: " + e);
         }
     }
 
@@ -74,7 +62,7 @@ public class Server {
         //System.out.println("In answer");
         StringBuilder toCheck = new StringBuilder(input);
         String[] element = input.split(" ");
-        if(element.length != 3) {
+        if (element.length != 3) {
             return "ERROR: Wrong query";
         }
         double operand1;
