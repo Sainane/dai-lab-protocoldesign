@@ -45,11 +45,17 @@ public class Client {
                 }
 
                 if (serverCanListen) {
-                    userInput = in.readLine() + "\n";
-                    out.write(userInput);
+                    userInput = stdin.nextLine();
+                    out.write(userInput + '\n');
                     out.flush();
                 }
             }
+            out.close();
+            stdin.close();
+            out.flush();
+            in.close();
+            socket.close();
+
         } catch  (IOException e) {
             System.out.println("Client: ex.: " + e);
         }

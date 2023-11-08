@@ -43,16 +43,18 @@ public class Server {
                     out.write("END_OF_OPERATIONS\n");
                     out.flush();
 
+
                     String line;
                     String answerToSend = "";
-                    while((line = in.readLine()) != null) {
-                        answerToSend = answer(line);
-                    }
-                    out.write(answerToSend);
+                    // out.write("Reading until client closes connection...");
+                    //System.out.println(in.readLine());
+                    line = in.readLine();
+                    answerToSend = answer(line);
+
+                    out.write(answerToSend + '\n');
                     out.flush();
 
                     out.write("Finishing process...");
-                    out.flush();
                     socket.close();
                     out.close();
                     in.close();
@@ -69,6 +71,7 @@ public class Server {
 
 
     private String answer(String input) {
+        //System.out.println("In answer");
         StringBuilder toCheck = new StringBuilder(input);
         String[] element = input.split(" ");
         if(element.length != 3) {
@@ -76,6 +79,7 @@ public class Server {
         }
         double operand1;
         double operand2;
+        //System.out.println("Parsing the operands");
         try {
             operand1 = Double.parseDouble(element[1]);
             operand2 = Double.parseDouble(element[2]);
@@ -83,6 +87,7 @@ public class Server {
             return "ERROR: The operands are not numbers.";
         }
 
+        //System.out.println("Going in the switch");
         return switch (element[0]) {
             case "ADD" -> Double.toString(operand1 + operand2);
             case "MUL" -> Double.toString(operand1 * operand2);
