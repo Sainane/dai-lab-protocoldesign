@@ -23,16 +23,7 @@ public class Client {
 
              Scanner stdin = new Scanner(System.in);
 
-             BufferedWriter out = new BufferedWriter(
-                     new OutputStreamWriter(socket.getOutputStream(),
-                             StandardCharsets.UTF_8))) {
-
-
-
-            // System.out.println("Please input your calculation: ");
-
-            // Is it the client that should check for the conformity of the user input ?
-            // or the server ?
+             PrintWriter out = new PrintWriter(socket.getOutputStream())) {
 
             String userInput;
             Boolean serverCanListen = false;
@@ -46,8 +37,9 @@ public class Client {
 
                 if (serverCanListen) {
                     userInput = stdin.nextLine();
-                    out.write(userInput + '\n');
+                    out.println(userInput);
                     out.flush();
+                    serverCanListen = false;
                 }
             }
             out.close();
