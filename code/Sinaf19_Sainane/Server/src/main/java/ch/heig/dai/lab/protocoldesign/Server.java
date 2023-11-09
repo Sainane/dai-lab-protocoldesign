@@ -39,6 +39,7 @@ public class Server {
             out.println("END_OF_OPERATIONS\n");
             out.flush();
 
+            // seems weird but with a while it does not work
             if ((inputLine = in.readLine()) != null) {
                 System.out.println(inputLine);
                 answerToSend = answer(inputLine);
